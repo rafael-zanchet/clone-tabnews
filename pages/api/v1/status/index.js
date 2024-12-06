@@ -14,12 +14,14 @@ async function status(request, response) {
     databaseMaxConnectionResult.rows[0].max_connections,
   );
 
-  const databaseActivityConnectionResult = await database.query(
-    "SELECT * FROM pg_stat_activity WHERE datname = 'local_db';",
-  );
-  console.log(databaseActivityConnectionResult.rows);
-  const databaseActivityConnectionCount =
-    databaseActivityConnectionResult.rows.length;
+  const databaseName = process.env.POSTGRES_DB;
+  const databaseOpenedConnectionsResult = await database.query({
+    text: "SELECT count(*)::int FROM pg_stat_activity WHERE datname = $1;",
+    values: [databaseName],
+  });
+
+  const databaseOpenedConnectionsValue =
+    databaseOpenedConnectionsResult.rows[0].count;
 
   response.status(200).json({
     updated_at: updatedAt,
@@ -27,6 +29,7 @@ async function status(request, response) {
       database: {
         version: databaseVersionValue,
         max_connections: databaseMaxConnectionValue,
+        opened_connections: databaseOpenedConnectionsValue,
       },
     },
   });

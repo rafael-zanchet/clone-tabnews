@@ -8,7 +8,7 @@ async function cleanDatabase() {
 
 test("GET to /api/v1/migrations should return 200", async () => {
   const response1 = await fetch("http://localhost:3000/api/v1/migrations", {
-    method: "POST",
+    method: "PUT",
   });
   expect(response1.status).toBe(201);
   const response1Body = await response1.json();

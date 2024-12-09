@@ -9,7 +9,7 @@ async function query(queryObject) {
     return result;
   } catch (err) {
     console.error("Error connecting to the database:", err.stack);
-    throw error;
+    throw err;
   } finally {
     await client.end();
   }

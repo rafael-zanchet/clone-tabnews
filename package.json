@@ -4,7 +4,7 @@
   "description": "treinando curso.devv",
   "main": "index.js",
   "scripts": {
-    "test": "npm run services:up && npm run wait-for-postgres && concurrently --names next,jest --hide next --kill-others --success command-jest 'next dev' 'jest --runInBand'",
+    "test": "npm run services:up && concurrently --names next,jest --hide next --kill-others --success command-jest \"next dev\" \"jest --runInBand --verbose\"",
     "test:watch": "jest --watchAll --runInBand",
     "dev": "npm run services:up && npm run wait-for-postgres && npm run migration:up && next dev",
     "services:up": "docker compose -f infra/compose.yaml up -d",

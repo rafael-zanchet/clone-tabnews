@@ -1,4 +1,3 @@
-import { version } from "react";
 import useSWR from "swr";
 
 async function fetchApi(key) {
@@ -51,7 +50,6 @@ function Database() {
   return (
     <>
       <div>Database status: {databaseStatus}</div>
-
       <h1>Database</h1>
       <div>Version: {databaseVersion}</div>
       <div>Max connections: {maxConnections}</div>

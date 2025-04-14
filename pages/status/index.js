@@ -1,3 +1,4 @@
+import { version } from "react";
 import useSWR from "swr";
 
 async function fetchApi(key) {
@@ -36,9 +37,15 @@ function Database() {
   });
 
   let databaseStatus = "Loading...";
+  let databaseVersion = "Loading...";
+  let maxConnections = "Loading...";
+  let openedConnections = "Loading...";
 
   if (!isLoading && data) {
     databaseStatus = data.dependencies.database.version ? "Online" : "Offline";
+    databaseVersion = data.dependencies.database.version;
+    maxConnections = data.dependencies.database.maxConnections;
+    openedConnections = data.dependencies.database.openedConnections;
   }
 
   return (
@@ -46,11 +53,9 @@ function Database() {
       <div>Database status: {databaseStatus}</div>
 
       <h1>Database</h1>
-      <div>Version: {data.dependencies.database.version}</div>
-      <div>Max connections: {data.dependencies.database.max_connections}</div>
-      <div>
-        Opened connections: {data.dependencies.database.opened_connections}
-      </div>
+      <div>Version: {databaseVersion}</div>
+      <div>Max connections: {maxConnections}</div>
+      <div>Opened connections: {openedConnections}</div>
     </>
   );
 }

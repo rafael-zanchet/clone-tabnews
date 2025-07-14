@@ -1,4 +1,4 @@
-import { InternalServerError, MethodNotAllowedError } from "infra/errors";
+import { InternalServerError, MethodNotAllowedError } from "infra/errors.js";
 
 function onErrorHandler(error, request, response) {
   const publicErrorObject = new InternalServerError({

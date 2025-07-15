@@ -58,3 +58,22 @@ export class ServiceError extends Error {
     };
   }
 }
+
+export class ValidationError extends Error {
+  constructor({ cause, message, action }) {
+    super(message || "Field not allowed", { cause });
+    this.name = "ValidationError";
+    this.action = action || "Verify data.";
+    this.statusCode = 400;
+  }
+
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      cause: this.cause ? this.cause.message : undefined,
+      action: this.action,
+      statusCode: this.statusCode,
+    };
+  }
+}

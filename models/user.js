@@ -30,10 +30,30 @@ async function findOneByUsername(username) {
   return userFoud;
 }
 async function create(userInputValues) {
+  await validateEmptyUsername(userInputValues.username);
+  await validateEmptyEmail(userInputValues.email);
   await validateUniqueEmail(userInputValues.email);
   await validateuniqueUsername(userInputValues.username);
   const newUser = await runInsertValues(userInputValues);
   return newUser;
+
+  async function validateEmptyUsername(username) {
+    if (!username) {
+      throw new ValidationError({
+        message: "Username cannot be empty",
+        action: "Use a different username",
+      });
+    }
+  }
+
+  async function validateEmptyEmail(email) {
+    if (!email) {
+      throw new ValidationError({
+        message: "Email cannot be empty",
+        action: "Use a different email",
+      });
+    }
+  }
 
   async function validateUniqueEmail(email) {
     const results = await database.query({

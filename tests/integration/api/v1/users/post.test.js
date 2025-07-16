@@ -38,6 +38,54 @@ describe("POST /api/v1/users", () => {
       expect(Date.parse(responseBody.updated_at)).not.toBeNaN();
     });
 
+    test("With empty username", async () => {
+      const response = await fetch("http://localhost:3000/api/v1/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: "",
+          email: "empty@gmail.com",
+          password: "123senha",
+        }),
+      });
+
+      expect(response.status).toBe(400);
+
+      const responseBody = await response.json();
+      expect(responseBody).toEqual({
+        name: "ValidationError",
+        message: "Username cannot be empty",
+        action: "Use a different username",
+        statusCode: 400,
+      });
+    });
+
+    test("With empty email", async () => {
+      const response = await fetch("http://localhost:3000/api/v1/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: "emptyEmail",
+          email: "",
+          password: "123senha",
+        }),
+      });
+
+      expect(response.status).toBe(400);
+
+      const responseBody = await response.json();
+      expect(responseBody).toEqual({
+        name: "ValidationError",
+        message: "Email cannot be empty",
+        action: "Use a different email",
+        statusCode: 400,
+      });
+    });
+
     test("With duplicated email", async () => {
       const response1 = await fetch("http://localhost:3000/api/v1/users", {
         method: "POST",

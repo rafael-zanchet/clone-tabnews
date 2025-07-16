@@ -58,3 +58,41 @@ export class ServiceError extends Error {
     };
   }
 }
+
+export class ValidationError extends Error {
+  constructor({ cause, message, action }) {
+    super(message || "Field not allowed", { cause });
+    this.name = "ValidationError";
+    this.action = action || "Verify data.";
+    this.statusCode = 400;
+  }
+
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      cause: this.cause ? this.cause.message : undefined,
+      action: this.action,
+      statusCode: this.statusCode,
+    };
+  }
+}
+
+export class NotFoundError extends Error {
+  constructor({ cause, message, action }) {
+    super(message || "User not found", { cause });
+    this.name = "NotFoundError";
+    this.action = action || "Check the username and try again";
+    this.statusCode = 404;
+  }
+
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      cause: this.cause ? this.cause.message : undefined,
+      action: this.action,
+      statusCode: this.statusCode,
+    };
+  }
+}

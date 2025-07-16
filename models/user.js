@@ -4,7 +4,7 @@ import { ValidationError, NotFoundError } from "infra/errors.js";
 async function findOneByUsername(username) {
   const userFoud = await runSelectQuery(username);
 
-  async function runSelectQuery(email) {
+  async function runSelectQuery(username) {
     const results = await database.query({
       text: `
         SELECT 

@@ -92,7 +92,7 @@ export class NotFoundError extends Error {
       message: this.message,
       cause: this.cause ? this.cause.message : undefined,
       action: this.action,
-      statusCode: this.statusCode,
+      status_code: this.statusCode,
     };
   }
 }

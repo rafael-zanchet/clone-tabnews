@@ -91,7 +91,7 @@ describe("GET /api/v1/users/[username]", () => {
         name: "NotFoundError",
         message: "User not found",
         action: "Check the username and try again",
-        statusCode: 404,
+        status_code: 404,
       });
     });
   });

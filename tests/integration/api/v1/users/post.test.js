@@ -74,7 +74,7 @@ describe("POST /api/v1/users", () => {
         name: "ValidationError",
         message: "Username cannot be empty",
         action: "Use a different username",
-        statusCode: 400,
+        status_code: 400,
       });
     });
 
@@ -98,7 +98,7 @@ describe("POST /api/v1/users", () => {
         name: "ValidationError",
         message: "Email cannot be empty",
         action: "Use a different email",
-        statusCode: 400,
+        status_code: 400,
       });
     });
 
@@ -136,7 +136,7 @@ describe("POST /api/v1/users", () => {
         name: "ValidationError",
         message: "Email already exists",
         action: "Use a different email",
-        statusCode: 400,
+        status_code: 400,
       });
     });
 
@@ -174,7 +174,7 @@ describe("POST /api/v1/users", () => {
         name: "ValidationError",
         message: "User already exists",
         action: "Use a different user",
-        statusCode: 400,
+        status_code: 400,
       });
     });
   });

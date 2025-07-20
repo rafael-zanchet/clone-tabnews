@@ -13,7 +13,7 @@ export class InternalServerError extends Error {
       message: this.message,
       cause: this.cause ? this.cause.message : undefined,
       action: this.action,
-      statusCode: this.statusCode,
+      status_code: this.statusCode,
       timestamp: new Date().toISOString(),
     };
   }
@@ -53,7 +53,7 @@ export class ServiceError extends Error {
       message: this.message,
       cause: this.cause ? this.cause.message : undefined,
       action: this.action,
-      statusCode: this.statusCode,
+      status_code: this.statusCode,
       timestamp: new Date().toISOString(),
     };
   }
@@ -73,7 +73,7 @@ export class ValidationError extends Error {
       message: this.message,
       cause: this.cause ? this.cause.message : undefined,
       action: this.action,
-      statusCode: this.statusCode,
+      status_code: this.statusCode,
     };
   }
 }
@@ -84,6 +84,25 @@ export class NotFoundError extends Error {
     this.name = "NotFoundError";
     this.action = action || "Check the username and try again";
     this.statusCode = 404;
+  }
+
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      cause: this.cause ? this.cause.message : undefined,
+      action: this.action,
+      status_code: this.statusCode,
+    };
+  }
+}
+
+export class UnauthorizedError extends Error {
+  constructor({ cause, message, action }) {
+    super(message || "Athentication failed", { cause });
+    this.name = "UnauthorizedError";
+    this.action = action || "Check data and try again";
+    this.statusCode = 401;
   }
 
   toJSON() {

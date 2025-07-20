@@ -54,7 +54,7 @@ describe("PATCH /api/v1/users/[username]", () => {
         name: "ValidationError",
         message: "User already exists",
         action: "Use a different user",
-        statusCode: 400,
+        status_code: 400,
       });
     });
 
@@ -83,7 +83,7 @@ describe("PATCH /api/v1/users/[username]", () => {
         name: "ValidationError",
         message: "Email already exists",
         action: "Use a different email",
-        statusCode: 400,
+        status_code: 400,
       });
     });
 

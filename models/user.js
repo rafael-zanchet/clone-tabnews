@@ -201,11 +201,41 @@ async function findOneByEmail(email) {
   }
 }
 
+async function findOneById(userId) {
+  const userFoud = await runSelectQuery(userId);
+
+  return userFoud;
+
+  async function runSelectQuery(userId) {
+    const results = await database.query({
+      text: `
+        SELECT 
+          *
+        FROM 
+          users 
+        WHERE 
+          id = $1
+        LIMIT 
+          1;`,
+      values: [userId],
+    });
+
+    if (results.rowCount === 0) {
+      throw new NotFoundError({
+        message: "Id not found",
+        action: "Check the id and try again",
+      });
+    }
+    return results.rows[0];
+  }
+}
+
 const user = {
   create,
+  findOneByEmail,
+  findOneById,
   findOneByUsername,
   update,
-  findOneByEmail,
 };
 
 export default user;

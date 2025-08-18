@@ -18,7 +18,7 @@ describe("POST /api/v1/migrations", () => {
         name: "MethodNotAllowedError",
         message: "The method POST is not allowed for this endpoint.",
         action: "Verify the request method and try again.",
-        statusCode: 405,
+        status_code: 405,
       });
     });
   });

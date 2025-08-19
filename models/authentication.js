@@ -2,7 +2,6 @@ import user from "models/user.js";
 import password from "models/password.js";
 import { NotFoundError, UnauthorizedError } from "infra/errors.js";
 async function getAuthenticatedUser(providedEmail, providedPassword) {
-  //console.log("getAuthenticatedUser:", providedEmail, providedPassword);
   try {
     const storedUser = await findUserByEmail(providedEmail);
 

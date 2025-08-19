@@ -6,8 +6,10 @@ const EXPIRATION_IN_MILLISECONDS = 60 * 60 * 24 * 30 * 1000; // 30 days
 async function create(userId) {
   const token = crypto.randomBytes(48).toString("hex");
   const expiresAt = new Date(Date.now() + EXPIRATION_IN_MILLISECONDS); // 30 days from now
+
   const newSession = await runInsertQuery(token, userId, expiresAt);
   return newSession;
+
   async function runInsertQuery(token, userId, expiresAt) {
     const result = await database.query({
       text: `
@@ -52,6 +54,7 @@ async function findOneValidByToken(sessionToken) {
     return result.rows[0];
   }
 }
+
 async function renew(sessionId) {
   const expiresAt = new Date(Date.now() + EXPIRATION_IN_MILLISECONDS);
   const updatedSession = await runUpdateQuery(sessionId, expiresAt);

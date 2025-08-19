@@ -52,6 +52,27 @@ describe("DELETE /api/v1/sessions", () => {
         path: "/",
         httpOnly: true,
       });
+
+      // Double check assertions
+      const doubleCheckResponse = await fetch(
+        "http://localhost:3000/api/v1/user",
+        {
+          headers: {
+            Cookie: `session_id=${sessionObj.token}`,
+          },
+        },
+      );
+
+      expect(doubleCheckResponse.status).toBe(401);
+
+      const doubleCheckResponseBody = await doubleCheckResponse.json();
+
+      expect(doubleCheckResponseBody).toEqual({
+        name: "UnauthorizedError",
+        message: "Session not found",
+        action: "Check the id and try again",
+        status_code: 401,
+      });
     });
 
     test("With nonexists session", async () => {

@@ -13,7 +13,7 @@ async function create(userId) {
   async function runInsertQuery(token, userId, expiresAt) {
     const result = await database.query({
       text: `
-        INSERT INTO 
+        INSERT INTO  
           sessions (token, user_id, expires_at)
         VALUES ($1, $2, $3)
         RETURNING *;`,
@@ -85,10 +85,40 @@ async function renew(sessionId) {
   }
 }
 
+async function expireById(sessionId) {
+  const expiredSession = await runUpdateQuery(sessionId);
+  return expiredSession;
+
+  async function runUpdateQuery(sessionId) {
+    const result = await database.query({
+      text: `
+        UPDATE
+          sessions
+        SET 
+          expires_at = expires_at - interval '1 year',
+          updated_at = NOW()
+        WHERE 
+          id = $1
+        RETURNING *
+        ;`,
+      values: [sessionId],
+    });
+
+    if (result.rowCount === 0) {
+      throw new UnauthorizedError({
+        message: "Session not found",
+        action: "Check the id and try again",
+      });
+    }
+    return result.rows[0];
+  }
+}
+
 const session = {
   create,
   findOneValidByToken,
   renew,
+  expireById,
   EXPIRATION_IN_MILLISECONDS,
 };
 export default session;

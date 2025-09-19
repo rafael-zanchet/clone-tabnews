@@ -21,7 +21,7 @@ describe("Email Infra", () => {
       text: "2 Corpo do email em texto puro",
     });
     const lastEmail = await orchestrator.getLastEmail();
-    //console.log(lastEmail);
+
     expect(lastEmail).toBeDefined();
     expect(lastEmail.sender).toBe("<rafael.zanchet@gmail.com>");
     expect(lastEmail.recipients[0]).toBe("<rafael@zanchet.com.br>");

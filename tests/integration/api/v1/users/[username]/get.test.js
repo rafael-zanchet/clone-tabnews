@@ -30,7 +30,7 @@ describe("GET /api/v1/users/[username]", () => {
         password: responseBody2.password,
         created_at: responseBody2.created_at,
         updated_at: responseBody2.updated_at,
-        features: [],
+        features: ["read:activation_token"],
       });
       expect(uuidVersion(responseBody2.id)).toBe(4);
       expect(Date.parse(responseBody2.created_at)).not.toBeNaN();
@@ -58,7 +58,7 @@ describe("GET /api/v1/users/[username]", () => {
         password: responseBody2.password,
         created_at: responseBody2.created_at,
         updated_at: responseBody2.updated_at,
-        features: [],
+        features: ["read:activation_token"],
       });
       expect(uuidVersion(responseBody2.id)).toBe(4);
       expect(Date.parse(responseBody2.created_at)).not.toBeNaN();

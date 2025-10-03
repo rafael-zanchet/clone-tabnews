@@ -34,7 +34,7 @@ describe("Use case: Registration Flow (all success)", () => {
       password: createUserResponseBody.password,
       created_at: createUserResponseBody.created_at,
       updated_at: createUserResponseBody.updated_at,
-      features: [],
+      features: ["read:activation_token"],
     });
   });
 

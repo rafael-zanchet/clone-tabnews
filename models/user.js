@@ -1,6 +1,7 @@
 import database from "infra/database.js";
 import password from "models/password.js";
 import { ValidationError, NotFoundError } from "infra/errors.js";
+import { use } from "react";
 
 async function findOneByUsername(username) {
   const userFoud = await runSelectQuery(username);
@@ -38,6 +39,8 @@ async function create(userInputValues) {
   await validateUniqueEmail(userInputValues.email);
 
   await hashPasswordInObject(userInputValues);
+  injectDefaultFeaturesInObject(userInputValues);
+
   const newUser = await runInsertValues(userInputValues);
   return newUser;
 
@@ -63,19 +66,23 @@ async function create(userInputValues) {
     const results = await database.query({
       text: `
       INSERT INTO users 
-        (username, email, password) 
+        (username, email, password, features) 
       VALUES 
-        ($1, $2, $3) 
+        ($1, $2, $3, $4) 
       RETURNING
         *;`,
       values: [
         userInputValues.username,
         userInputValues.email,
         userInputValues.password,
+        userInputValues.features,
       ],
     });
 
     return results.rows[0];
+  }
+  function injectDefaultFeaturesInObject(userInputValues) {
+    userInputValues.features = ["read:activation_token"];
   }
 }
 

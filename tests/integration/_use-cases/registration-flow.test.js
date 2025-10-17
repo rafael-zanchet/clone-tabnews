@@ -1,6 +1,7 @@
 import email from "infra/email.js";
 import password from "models/password";
 import orchestrator from "tests/orchestrator";
+import activation from "models/activation";
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices();
@@ -10,6 +11,8 @@ beforeAll(async () => {
 });
 
 describe("Use case: Registration Flow (all success)", () => {
+  let createUserResponseBody;
+
   test("Create user account", async () => {
     const createUserResponse = await fetch(
       "http://localhost:3000/api/v1/users",
@@ -25,7 +28,7 @@ describe("Use case: Registration Flow (all success)", () => {
     );
     expect(createUserResponse.status).toBe(201);
 
-    const createUserResponseBody = await createUserResponse.json();
+    createUserResponseBody = await createUserResponse.json();
 
     expect(createUserResponseBody).toEqual({
       id: expect.any(String),
@@ -38,7 +41,22 @@ describe("Use case: Registration Flow (all success)", () => {
     });
   });
 
-  test("Check email sent", async () => {});
+  test("Check email sent", async () => {
+    const lastEmail = await orchestrator.getLastEmail();
+
+    const activationToken = await activation.findOneByUserId(
+      createUserResponseBody.id,
+    );
+
+    expect(lastEmail.sender).toBe("<contato@clonetabnews.com>");
+    expect(lastEmail.recipients[0]).toBe(
+      "<registration.flow@clonetabnews.com>",
+    );
+    expect(lastEmail.subject).toBe("Ative sua conta no Clone TabNews");
+
+    expect(lastEmail.text).toContain("RegistrationFlow");
+    expect(lastEmail.text).toContain(activationToken.id);
+  });
 
   test("Activate user account", async () => {});
 

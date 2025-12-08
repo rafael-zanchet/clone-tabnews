@@ -1,6 +1,5 @@
-import email from "infra/email.js";
-import password from "models/password";
 import orchestrator from "tests/orchestrator";
+import webserver from "infra/webserver";
 import activation from "models/activation";
 
 beforeAll(async () => {
@@ -44,10 +43,6 @@ describe("Use case: Registration Flow (all success)", () => {
   test("Check email sent", async () => {
     const lastEmail = await orchestrator.getLastEmail();
 
-    const activationToken = await activation.findOneByUserId(
-      createUserResponseBody.id,
-    );
-
     expect(lastEmail.sender).toBe("<contato@clonetabnews.com>");
     expect(lastEmail.recipients[0]).toBe(
       "<registration.flow@clonetabnews.com>",
@@ -55,7 +50,17 @@ describe("Use case: Registration Flow (all success)", () => {
     expect(lastEmail.subject).toBe("Ative sua conta no Clone TabNews");
 
     expect(lastEmail.text).toContain("RegistrationFlow");
-    expect(lastEmail.text).toContain(activationToken.id);
+
+    const activationTokenId = orchestrator.extractUUID(lastEmail.text);
+    expect(lastEmail.text).toContain(
+      `${webserver.origin}/cadastro/activate/${activationTokenId}`,
+    );
+
+    const activationTokenObject =
+      await activation.findOneValidById(activationTokenId);
+
+    expect(activationTokenObject.id).toEqual(activationTokenId);
+    expect(activationTokenObject.used_at).toEqual(null);
   });
 
   test("Activate user account", async () => {});

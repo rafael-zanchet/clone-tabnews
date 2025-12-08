@@ -4,22 +4,49 @@ import webserver from "infra/webserver.js";
 
 const EXPIRATION_IN_MILLISECONDS = 60 * 15 * 1000; // 15 MIN
 
-async function findOneByUserId(userId) {
-  const newToken = await runInsertQuery(userId);
-  return newToken;
+// async function findOneByUserId(userId) {
+//   const newToken = await runInsertQuery(userId);
+//   return newToken;
 
-  async function runInsertQuery(userId, expiresAt) {
+//   async function runInsertQuery(userId, expiresAt) {
+//     const result = await database.query({
+//       text: `
+//         SELECT *
+//         FROM user_activation_tokens
+//         WHERE user_id = $1
+//         LIMIT 1
+//       ;`,
+//       values: [userId],
+//     });
+//     return result.rows[0];
+//   }
+// }
+
+async function findOneValidById(tokenId) {
+  const activationTokenObject = await runSelectQuery(tokenId);
+
+  async function runSelectQuery(tokenId) {
     const result = await database.query({
       text: `
         SELECT *
-        FROM user_activation_tokens 
-        WHERE user_id = $1
+        FROM user_activation_tokens
+        WHERE id = $1
+          AND used_at IS NULL
+          AND expires_at > timezone('UTC', now())
         LIMIT 1
       ;`,
-      values: [userId],
+      values: [tokenId],
     });
+
+    if (result.rowCount === 0) {
+      throw new NotFoundError({
+        message: "Token já utilizado ou expirado.",
+        action: "Favor gerar um novo token de ativação.",
+      });
+    }
     return result.rows[0];
   }
+  return activationTokenObject;
 }
 
 async function create(userId) {
@@ -59,9 +86,10 @@ Equipe Clone TabNews
 }
 
 const activation = {
-  findOneByUserId,
+  // findOneByUserId,
   create,
   sendEmailToUser,
+  findOneValidById,
 };
 
 export default activation;

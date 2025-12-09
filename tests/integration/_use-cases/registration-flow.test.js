@@ -1,6 +1,7 @@
 import orchestrator from "tests/orchestrator";
 import webserver from "infra/webserver";
 import activation from "models/activation";
+import user from "models/user";
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices();
@@ -11,20 +12,18 @@ beforeAll(async () => {
 
 describe("Use case: Registration Flow (all success)", () => {
   let createUserResponseBody;
+  let activationTokenId;
 
   test("Create user account", async () => {
-    const createUserResponse = await fetch(
-      "http://localhost:3000/api/v1/users",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username: "RegistrationFlow",
-          email: "registration.flow@clonetabnews.com",
-          password: "senha123",
-        }),
-      },
-    );
+    const createUserResponse = await fetch(`${webserver.origin}/api/v1/users`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: "RegistrationFlow",
+        email: "registration.flow@clonetabnews.com",
+        password: "senha123",
+      }),
+    });
     expect(createUserResponse.status).toBe(201);
 
     createUserResponseBody = await createUserResponse.json();
@@ -51,7 +50,7 @@ describe("Use case: Registration Flow (all success)", () => {
 
     expect(lastEmail.text).toContain("RegistrationFlow");
 
-    const activationTokenId = orchestrator.extractUUID(lastEmail.text);
+    activationTokenId = orchestrator.extractUUID(lastEmail.text);
     expect(lastEmail.text).toContain(
       `${webserver.origin}/cadastro/activate/${activationTokenId}`,
     );
@@ -63,7 +62,21 @@ describe("Use case: Registration Flow (all success)", () => {
     expect(activationTokenObject.used_at).toEqual(null);
   });
 
-  test("Activate user account", async () => {});
+  test("Activate user account", async () => {
+    const actionvationResponse = await fetch(
+      `${webserver.origin}/api/v1/activations/${activationTokenId}`,
+      {
+        method: "PATCH",
+      },
+    );
+    expect(actionvationResponse.status).toBe(200);
+
+    const actionvationResponseBody = await actionvationResponse.json();
+    expect(Date.parse(actionvationResponseBody.used_at)).not.toBeNaN();
+
+    const activatedUser = await user.findOneByUsername("RegistrationFlow");
+    expect(activatedUser.features).toEqual(["create:session"]);
+  });
 
   test("Login with activated account", async () => {});
 

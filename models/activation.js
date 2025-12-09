@@ -1,29 +1,13 @@
 import email from "infra/email.js";
 import database from "infra/database";
 import webserver from "infra/webserver.js";
+import user from "models/user.js";
 
 const EXPIRATION_IN_MILLISECONDS = 60 * 15 * 1000; // 15 MIN
 
-// async function findOneByUserId(userId) {
-//   const newToken = await runInsertQuery(userId);
-//   return newToken;
-
-//   async function runInsertQuery(userId, expiresAt) {
-//     const result = await database.query({
-//       text: `
-//         SELECT *
-//         FROM user_activation_tokens
-//         WHERE user_id = $1
-//         LIMIT 1
-//       ;`,
-//       values: [userId],
-//     });
-//     return result.rows[0];
-//   }
-// }
-
 async function findOneValidById(tokenId) {
   const activationTokenObject = await runSelectQuery(tokenId);
+  return activationTokenObject;
 
   async function runSelectQuery(tokenId) {
     const result = await database.query({
@@ -46,7 +30,6 @@ async function findOneValidById(tokenId) {
     }
     return result.rows[0];
   }
-  return activationTokenObject;
 }
 
 async function create(userId) {
@@ -85,11 +68,40 @@ Equipe Clone TabNews
   });
 }
 
+async function markTokenAsUsed(activationTokenId) {
+  const userdActivationToken = await runUpdateQuery(activationTokenId);
+  return userdActivationToken;
+
+  async function runUpdateQuery(activationTokenId) {
+    const result = await database.query({
+      text: `
+        UPDATE 
+          user_activation_tokens
+        SET 
+          used_at = timezone('UTC', now()),
+            updated_at = timezone('UTC', now())
+        WHERE 
+          id = $1
+        RETURNING *
+      ;`,
+      values: [activationTokenId],
+    });
+    return result.rows[0];
+  }
+}
+
+async function activateUserByUserId(userId) {
+  const activatedUser = await user.setFeatures(userId, ["create:session"]);
+  return activatedUser;
+}
+
 const activation = {
   // findOneByUserId,
   create,
   sendEmailToUser,
   findOneValidById,
+  markTokenAsUsed,
+  activateUserByUserId,
 };
 
 export default activation;

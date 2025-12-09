@@ -85,7 +85,7 @@ describe("Use case: Registration Flow (all success)", () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          username: "registration.flow@clonetabnews.com",
+          email: "registration.flow@clonetabnews.com",
           password: "senha123",
         }),
       },

@@ -9,7 +9,7 @@ import {
 import * as cookie from "cookie";
 import session from "models/session.js";
 import user from "models/user.js";
-import { forbidden } from "next/navigation";
+import authorization from "models/authorization.js";
 
 function onErrorHandler(error, request, response) {
   if (
@@ -88,7 +88,7 @@ function canRequest(feature) {
   return function canRequestMiddleware(request, response, next) {
     const userTryingToRequest = request.context.user;
 
-    if (userTryingToRequest.features.includes(feature)) {
+    if (authorization.can(userTryingToRequest, feature)) {
       return next();
     }
     throw new ForbiddenError({

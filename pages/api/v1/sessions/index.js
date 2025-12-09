@@ -2,7 +2,9 @@ import { createRouter } from "next-connect";
 import controller from "infra/controller.js";
 
 import authentication from "models/authentication.js";
+import authorization from "models/authorization";
 import session from "models/session.js";
+import { ForbiddenError } from "infra/errors";
 
 const router = createRouter();
 
@@ -16,9 +18,16 @@ async function postHandler(request, response) {
   const userInputValues = request.body;
 
   const authenticatedUser = await authentication.getAuthenticatedUser(
-    userInputValues.username,
+    userInputValues.email,
     userInputValues.password,
   );
+
+  if (!authorization.can(authenticatedUser, "create:session")) {
+    throw new ForbiddenError({
+      message: "Your account is not login",
+      action: "Contact support to activate your account",
+    });
+  }
 
   const newSession = await session.create(authenticatedUser.id);
 

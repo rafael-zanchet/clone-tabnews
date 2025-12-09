@@ -115,3 +115,22 @@ export class UnauthorizedError extends Error {
     };
   }
 }
+
+export class ForbiddenError extends Error {
+  constructor({ cause, message, action }) {
+    super(message || "Athentication failed", { cause });
+    this.name = "ForbiddenError";
+    this.action = action || "Check data and try again";
+    this.statusCode = 403;
+  }
+
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      cause: this.cause ? this.cause.message : undefined,
+      action: this.action,
+      status_code: this.statusCode,
+    };
+  }
+}

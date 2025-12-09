@@ -180,9 +180,9 @@ async function update(username, userInputValues) {
 }
 
 async function findOneByEmail(email) {
-  const userFoud = await runSelectQuery(email);
+  const userFound = await runSelectQuery(email);
 
-  return userFoud;
+  return userFound;
 
   async function runSelectQuery(email) {
     const results = await database.query({

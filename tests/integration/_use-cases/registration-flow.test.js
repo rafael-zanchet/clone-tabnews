@@ -78,7 +78,24 @@ describe("Use case: Registration Flow (all success)", () => {
     expect(activatedUser.features).toEqual(["create:session"]);
   });
 
-  test("Login with activated account", async () => {});
+  test("Login with activated account", async () => {
+    const createSessionsResponse = await fetch(
+      `${webserver.origin}/api/v1/sessions`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: "registration.flow@clonetabnews.com",
+          password: "senha123",
+        }),
+      },
+    );
+    expect(createSessionsResponse.status).toBe(201);
+
+    const createSessionsResponseBody = await createSessionsResponse.json();
+
+    expect(createSessionsResponseBody.user_id).toBe(createUserResponseBody.id);
+  });
 
   test("Fetch user profile", async () => {});
 });

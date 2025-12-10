@@ -2,6 +2,8 @@ import orchestrator from "tests/orchestrator";
 import { version as uuidVersion } from "uuid";
 import user from "models/user.js";
 import password from "models/password.js";
+import webserver from "infra/webserver";
+
 beforeAll(async () => {
   await orchestrator.waitForAllServices();
   await orchestrator.clearDatabase();
@@ -12,7 +14,7 @@ describe("PATCH /api/v1/users/[username]", () => {
   describe("Anonymous user", () => {
     test("With nonexistent username", async () => {
       const response = await fetch(
-        "http://localhost:3000/api/v1/users/UsuarioInexistente",
+        `${webserver.origin}/api/v1/users/UsuarioInexistente`,
         {
           method: "PATCH",
         },
@@ -35,7 +37,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       const duplicatedUser2 = await orchestrator.createUser({});
 
       const response = await fetch(
-        `http://localhost:3000/api/v1/users/${duplicatedUser2.username}`,
+        `${webserver.origin}/api/v1/users/${duplicatedUser2.username}`,
         {
           method: "PATCH",
           headers: {

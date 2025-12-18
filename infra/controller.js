@@ -18,18 +18,18 @@ function onErrorHandler(error, request, response) {
     error instanceof UnauthorizedError ||
     error instanceof ForbiddenError
   ) {
-    return response.status(error.statusCode).json(error);
+    return response.status(error.status_code).json(error);
   }
   const publicErrorObject = new InternalServerError({
     cause: error,
   });
   console.error(publicErrorObject);
-  response.status(publicErrorObject.statusCode).json(publicErrorObject);
+  response.status(publicErrorObject.status_code).json(publicErrorObject);
 }
 
 function onNoMatchHandler(request, response) {
   const publicErrorObject = new MethodNotAllowedError();
-  response.status(publicErrorObject.statusCode).json(publicErrorObject);
+  response.status(publicErrorObject.status_code).json(publicErrorObject);
 }
 
 async function setSessionCookie(sessionToken, response) {
@@ -94,6 +94,7 @@ function canRequest(feature) {
     throw new ForbiddenError({
       message: "You do not have permission to perform this action",
       action: "Contact support if you believe this is an error",
+      status_code: 403,
     });
   };
 }

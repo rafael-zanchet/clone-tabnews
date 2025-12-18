@@ -3,7 +3,7 @@ export class InternalServerError extends Error {
     super("Internal Error Occurred", { cause });
     this.name = "InternalServerError";
     this.action = "Call the support team";
-    this.statusCode = statusCode || 500;
+    this.status_code = statusCode || 500;
   }
 
   toJSON() {
@@ -13,7 +13,7 @@ export class InternalServerError extends Error {
       message: this.message,
       cause: this.cause ? this.cause.message : undefined,
       action: this.action,
-      status_code: this.statusCode,
+      status_code: this.status_code,
       timestamp: new Date().toISOString(),
     };
   }
@@ -24,7 +24,7 @@ export class MethodNotAllowedError extends Error {
     super("The method POST is not allowed for this endpoint.");
     this.name = "MethodNotAllowedError";
     this.action = "Verify the request method and try again.";
-    this.statusCode = 405;
+    this.status_code = 405;
   }
 
   toJSON() {
@@ -33,7 +33,7 @@ export class MethodNotAllowedError extends Error {
       message: this.message,
       cause: this.cause ? this.cause.message : undefined,
       action: this.action,
-      status_code: this.statusCode,
+      status_code: this.status_code,
     };
   }
 }
@@ -43,7 +43,7 @@ export class ServiceError extends Error {
     super(message || "Service not available", { cause });
     this.name = "ServiceError";
     this.action = "Verify the service status and try again later.";
-    this.statusCode = 503;
+    this.status_code = 503;
   }
 
   toJSON() {
@@ -53,7 +53,7 @@ export class ServiceError extends Error {
       message: this.message,
       cause: this.cause ? this.cause.message : undefined,
       action: this.action,
-      status_code: this.statusCode,
+      status_code: this.status_code,
       timestamp: new Date().toISOString(),
     };
   }
@@ -64,7 +64,7 @@ export class ValidationError extends Error {
     super(message || "Field not allowed", { cause });
     this.name = "ValidationError";
     this.action = action || "Verify data.";
-    this.statusCode = 400;
+    this.status_code = 400;
   }
 
   toJSON() {
@@ -73,7 +73,7 @@ export class ValidationError extends Error {
       message: this.message,
       cause: this.cause ? this.cause.message : undefined,
       action: this.action,
-      status_code: this.statusCode,
+      status_code: this.status_code,
     };
   }
 }
@@ -83,7 +83,7 @@ export class NotFoundError extends Error {
     super(message || "User not found", { cause });
     this.name = "NotFoundError";
     this.action = action || "Check the username and try again";
-    this.statusCode = 404;
+    this.status_code = 404;
   }
 
   toJSON() {
@@ -92,7 +92,7 @@ export class NotFoundError extends Error {
       message: this.message,
       cause: this.cause ? this.cause.message : undefined,
       action: this.action,
-      status_code: this.statusCode,
+      status_code: this.status_code,
     };
   }
 }
@@ -102,7 +102,7 @@ export class UnauthorizedError extends Error {
     super(message || "Athentication failed", { cause });
     this.name = "UnauthorizedError";
     this.action = action || "Check data and try again";
-    this.statusCode = 401;
+    this.status_code = 401;
   }
 
   toJSON() {
@@ -111,7 +111,7 @@ export class UnauthorizedError extends Error {
       message: this.message,
       cause: this.cause ? this.cause.message : undefined,
       action: this.action,
-      status_code: this.statusCode,
+      status_code: this.status_code,
     };
   }
 }
@@ -121,7 +121,7 @@ export class ForbiddenError extends Error {
     super(message || "Athentication failed", { cause });
     this.name = "ForbiddenError";
     this.action = action || "Check data and try again";
-    this.statusCode = 403;
+    this.status_code = 403;
   }
 
   toJSON() {
@@ -130,7 +130,7 @@ export class ForbiddenError extends Error {
       message: this.message,
       cause: this.cause ? this.cause.message : undefined,
       action: this.action,
-      status_code: this.statusCode,
+      status_code: this.status_code,
     };
   }
 }

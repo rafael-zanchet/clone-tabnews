@@ -76,7 +76,14 @@ describe("Use case: Registration Flow (all success)", () => {
     expect(Date.parse(actionvationResponseBody.used_at)).not.toBeNaN();
 
     const activatedUser = await user.findOneByUsername("RegistrationFlow");
-    expect(activatedUser.features).toEqual(["create:session", "read:session"]);
+    expect(activatedUser.features).toEqual([
+      "create:session",
+      "read:session",
+      "read:farm",
+      "create:farm",
+      "update:farm",
+      "delete:farm",
+    ]);
   });
 
   test("Login with activated account", async () => {

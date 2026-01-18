@@ -12,11 +12,45 @@ beforeAll(async () => {
 
 describe("PATCH /api/v1/users/[username]", () => {
   describe("Anonymous user", () => {
+    test("With unique username", async () => {
+      const uniqueUser = await orchestrator.createUser({});
+
+      const response = await fetch(
+        `http://localhost:3000/api/v1/users/${uniqueUser.username}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({}),
+        },
+      );
+
+      expect(response.status).toBe(403);
+
+      const responseBody = await response.json();
+      expect(responseBody).toEqual({
+        action: "Contact support if you believe this is an error",
+        message: "You do not have permission to perform this action",
+        name: "ForbiddenError",
+        status_code: 403,
+      });
+    });
+  });
+
+  describe("Default user", () => {
     test("With nonexistent username", async () => {
+      const createdUser = await orchestrator.createUser({});
+      const activatedUser = await orchestrator.activateUser(createdUser);
+      const sessionObj = await orchestrator.createSession(activatedUser.id);
+
       const response = await fetch(
         `${webserver.origin}/api/v1/users/UsuarioInexistente`,
         {
           method: "PATCH",
+          headers: {
+            Cookie: `session_id=${sessionObj.token}`,
+          },
         },
       );
 
@@ -35,6 +69,8 @@ describe("PATCH /api/v1/users/[username]", () => {
       const duplicatedUser1 = await orchestrator.createUser({});
 
       const duplicatedUser2 = await orchestrator.createUser({});
+      const activatedUser2 = await orchestrator.activateUser(duplicatedUser2);
+      const sessionObj2 = await orchestrator.createSession(activatedUser2.id);
 
       const response = await fetch(
         `${webserver.origin}/api/v1/users/${duplicatedUser2.username}`,
@@ -42,6 +78,7 @@ describe("PATCH /api/v1/users/[username]", () => {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
+            Cookie: `session_id=${sessionObj2.token}`,
           },
           body: JSON.stringify({
             username: duplicatedUser1.username,
@@ -65,12 +102,16 @@ describe("PATCH /api/v1/users/[username]", () => {
 
       const duplicatedEmail2 = await orchestrator.createUser({});
 
+      const activatedUser2 = await orchestrator.activateUser(duplicatedEmail2);
+      const sessionObj2 = await orchestrator.createSession(duplicatedEmail2.id);
+
       const response = await fetch(
         `http://localhost:3000/api/v1/users/${duplicatedEmail2.username}`,
         {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
+            Cookie: `session_id=${sessionObj2.token}`,
           },
           body: JSON.stringify({
             email: duplicatedEmail1.email,
@@ -91,6 +132,8 @@ describe("PATCH /api/v1/users/[username]", () => {
 
     test("With unique username", async () => {
       const uniqueUser = await orchestrator.createUser({});
+      const activatedUser = await orchestrator.activateUser(uniqueUser);
+      const sessionObj = await orchestrator.createSession(activatedUser.id);
 
       const response = await fetch(
         `http://localhost:3000/api/v1/users/${uniqueUser.username}`,
@@ -98,6 +141,7 @@ describe("PATCH /api/v1/users/[username]", () => {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
+            Cookie: `session_id=${sessionObj.token}`,
           },
           body: JSON.stringify({}),
         },
@@ -113,7 +157,15 @@ describe("PATCH /api/v1/users/[username]", () => {
         password: responseBody.password, // Password should be hashed
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
-        features: ["read:activation_token"],
+        features: [
+          "create:session",
+          "read:session",
+          "update:user",
+          "read:farm",
+          "create:farm",
+          "update:farm",
+          "delete:farm",
+        ],
       });
       expect(uuidVersion(responseBody.id)).toBe(4);
       expect(Date.parse(responseBody.created_at)).not.toBeNaN();
@@ -123,6 +175,8 @@ describe("PATCH /api/v1/users/[username]", () => {
 
     test("With unique email", async () => {
       const uniqueEmail = await orchestrator.createUser({});
+      const activatedUser = await orchestrator.activateUser(uniqueEmail);
+      const sessionObj = await orchestrator.createSession(activatedUser.id);
 
       const response = await fetch(
         `http://localhost:3000/api/v1/users/${uniqueEmail.username}`,
@@ -130,6 +184,7 @@ describe("PATCH /api/v1/users/[username]", () => {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
+            Cookie: `session_id=${sessionObj.token}`,
           },
           body: JSON.stringify({
             email: "uniqueEmail2@gmail.com",
@@ -147,7 +202,15 @@ describe("PATCH /api/v1/users/[username]", () => {
         password: responseBody.password, // Password should be hashed
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
-        features: ["read:activation_token"],
+        features: [
+          "create:session",
+          "read:session",
+          "update:user",
+          "read:farm",
+          "create:farm",
+          "update:farm",
+          "delete:farm",
+        ],
       });
       expect(uuidVersion(responseBody.id)).toBe(4);
       expect(Date.parse(responseBody.created_at)).not.toBeNaN();
@@ -157,6 +220,8 @@ describe("PATCH /api/v1/users/[username]", () => {
 
     test("With new password", async () => {
       const user1Response = await orchestrator.createUser({});
+      const activatedUser = await orchestrator.activateUser(user1Response);
+      const sessionObj = await orchestrator.createSession(activatedUser.id);
 
       const response = await fetch(
         `http://localhost:3000/api/v1/users/${user1Response.username}`,
@@ -164,6 +229,7 @@ describe("PATCH /api/v1/users/[username]", () => {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
+            Cookie: `session_id=${sessionObj.token}`,
           },
           body: JSON.stringify({
             password: "novasenha",
@@ -182,7 +248,15 @@ describe("PATCH /api/v1/users/[username]", () => {
         password: responseBody.password, // Password should be hashed
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
-        features: ["read:activation_token"],
+        features: [
+          "create:session",
+          "read:session",
+          "update:user",
+          "read:farm",
+          "create:farm",
+          "update:farm",
+          "delete:farm",
+        ],
       });
       expect(uuidVersion(responseBody.id)).toBe(4);
       expect(Date.parse(responseBody.created_at)).not.toBeNaN();

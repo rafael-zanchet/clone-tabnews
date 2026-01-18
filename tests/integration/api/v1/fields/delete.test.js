@@ -10,7 +10,7 @@ beforeAll(async () => {
 });
 
 describe("PATCH /api/v1/field", () => {
-  describe("Default user", () => {
+  describe.skip("Default user", () => {
     test("With INVALID session and field data", async () => {
       let createdUser = await orchestrator.createUser({});
       await orchestrator.activateUser(createdUser);

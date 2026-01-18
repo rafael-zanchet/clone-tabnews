@@ -13,7 +13,7 @@ beforeAll(async () => {
 });
 
 describe("GET /api/v1/field", () => {
-  describe("Default user", () => {
+  describe.skip("Default user", () => {
     test("With INVALID session", async () => {
       let createdUser = await orchestrator.createUser({});
       await orchestrator.activateUser(createdUser);

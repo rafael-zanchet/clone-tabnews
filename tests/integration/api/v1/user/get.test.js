@@ -51,6 +51,7 @@ describe("GET /api/v1/user", () => {
         features: [
           "create:session",
           "read:session",
+          "update:user",
           "read:farm",
           "create:farm",
           "update:farm",

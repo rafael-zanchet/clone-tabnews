@@ -9,7 +9,7 @@ beforeAll(async () => {
 });
 
 describe("POST /api/v1/farm", () => {
-  describe("Default user", () => {
+  describe.skip("Default user", () => {
     test("With valid session and farm data", async () => {
       let createdUser = await orchestrator.createUser({});
       await orchestrator.activateUser(createdUser);

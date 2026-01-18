@@ -106,6 +106,10 @@ async function createFarm(farmObject) {
     user_id: farmObject.user_id,
   });
 }
+async function addFeaturesToUser(userObj, features) {
+  const updatedUser = await user.addFeatures(userObj.id, features);
+  return updatedUser;
+}
 
 const orchestrator = {
   waitForAllServices,
@@ -118,6 +122,7 @@ const orchestrator = {
   extractUUID,
   activateUser,
   createFarm,
+  addFeaturesToUser,
 };
 
 export default orchestrator;

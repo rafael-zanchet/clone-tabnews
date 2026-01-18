@@ -3,6 +3,7 @@ import { version as uuidVersion } from "uuid";
 import user from "models/user.js";
 import password from "models/password.js";
 import webserver from "infra/webserver";
+import email from "infra/email";
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices();
@@ -94,6 +95,44 @@ describe("PATCH /api/v1/users/[username]", () => {
         message: "User already exists",
         action: "Use a different user",
         status_code: 400,
+      });
+    });
+
+    test("With user2 targeting user1", async () => {
+      const duplicatedUser1 = await orchestrator.createUser({
+        username: "user1",
+        email: "user1@user1.com",
+      });
+
+      const duplicatedUser2 = await orchestrator.createUser({
+        username: "user2",
+        email: "user2@user2.com",
+      });
+      const activatedUser2 = await orchestrator.activateUser(duplicatedUser2);
+      const sessionObj2 = await orchestrator.createSession(activatedUser2.id);
+
+      const response = await fetch(
+        `${webserver.origin}/api/v1/users/${duplicatedUser1.username}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Cookie: `session_id=${sessionObj2.token}`,
+          },
+          body: JSON.stringify({
+            username: "user3",
+          }),
+        },
+      );
+
+      expect(response.status).toBe(403);
+
+      const responseBody = await response.json();
+      expect(responseBody).toEqual({
+        action: "Check your permissions",
+        message: "You are not allowed to update this user",
+        name: "ForbiddenError",
+        status_code: 403,
       });
     });
 

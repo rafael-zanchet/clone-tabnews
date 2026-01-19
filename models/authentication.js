@@ -32,6 +32,7 @@ async function getAuthenticatedUser(providedEmail, providedPassword) {
       }
       throw error;
     }
+
     return userFound;
   }
 
@@ -40,6 +41,7 @@ async function getAuthenticatedUser(providedEmail, providedPassword) {
       providedPassword,
       storedPassword,
     );
+
     if (!correctPassword) {
       throw new UnauthorizedError({
         message: "Password does not match",

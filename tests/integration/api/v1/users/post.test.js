@@ -2,6 +2,7 @@ import orchestrator from "tests/orchestrator";
 import { version as uuidVersion } from "uuid";
 import user from "models/user.js";
 import password from "models/password.js";
+import webserver from "infra/webserver";
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices();
@@ -34,6 +35,7 @@ describe("POST /api/v1/users", () => {
         password: responseBody.password, // Password should be hashed
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
+        features: ["read:activation_token"],
       });
       expect(uuidVersion(responseBody.id)).toBe(4);
       expect(Date.parse(responseBody.created_at)).not.toBeNaN();
@@ -175,6 +177,36 @@ describe("POST /api/v1/users", () => {
         message: "User already exists",
         action: "Use a different user",
         status_code: 400,
+      });
+    });
+  });
+
+  describe("Default user", () => {
+    test("With unique and valid data", async () => {
+      const user1 = await orchestrator.createUser({});
+      await orchestrator.activateUser(user1);
+      const user1SessionObj = await orchestrator.createSession(user1.id);
+
+      const user2Response = await fetch(`${webserver.origin}/api/v1/users`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `session_id=${user1SessionObj.token}`,
+        },
+        body: JSON.stringify({
+          username: "usuariologado",
+          email: "usuariologado@curso.dev",
+          password: "senha123",
+        }),
+      });
+      const user2ResponseBody = await user2Response.json();
+      expect(user2Response.status).toBe(403);
+
+      expect(user2ResponseBody).toEqual({
+        name: "ForbiddenError",
+        message: "You do not have permission to perform this action",
+        action: "Contact support if you believe this is an error",
+        status_code: 403,
       });
     });
   });

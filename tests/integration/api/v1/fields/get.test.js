@@ -13,9 +13,9 @@ describe("GET /api/v1/field", () => {
     test("With INVALID session", async () => {
       let createdUser = await orchestrator.createUser({});
       await orchestrator.activateUser(createdUser);
-      const userSessionObj = await orchestrator.createSession(createdUser.id);
+      orchestrator.createSession(createdUser.id);
       createdUser = await user.findOneById(createdUser.id);
-      const field1 = await orchestrator.createfield({
+      await orchestrator.createfield({
         user_id: createdUser.id,
       });
 

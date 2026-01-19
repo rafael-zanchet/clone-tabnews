@@ -1,8 +1,4 @@
 import orchestrator from "tests/orchestrator";
-import { version as uuidVersion } from "uuid";
-import session from "models/session";
-import farm from "models/farm";
-import setCookieParser from "set-cookie-parser";
 import user from "models/user";
 import webserver from "infra/webserver";
 
@@ -17,9 +13,9 @@ describe("GET /api/v1/farm", () => {
     test("With INVALID session", async () => {
       let createdUser = await orchestrator.createUser({});
       await orchestrator.activateUser(createdUser);
-      const userSessionObj = await orchestrator.createSession(createdUser.id);
+      await orchestrator.createSession(createdUser.id);
       createdUser = await user.findOneById(createdUser.id);
-      const farm1 = await orchestrator.createFarm({ user_id: createdUser.id });
+      await orchestrator.createFarm({ user_id: createdUser.id });
 
       const response = await fetch(`${webserver.origin}/api/v1/farm`, {
         method: "GET",

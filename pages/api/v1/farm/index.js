@@ -3,7 +3,6 @@ import controller from "infra/controller.js";
 import { UnauthorizedError } from "infra/errors.js";
 import session from "models/session.js";
 import farm from "models/farm.js";
-import { up } from "infra/migrations/1752591399749_create-users";
 
 const router = createRouter();
 router.use(controller.injectAnonymousOrUser);

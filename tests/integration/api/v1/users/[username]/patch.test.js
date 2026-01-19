@@ -3,7 +3,6 @@ import { version as uuidVersion } from "uuid";
 import user from "models/user.js";
 import password from "models/password.js";
 import webserver from "infra/webserver";
-import email from "infra/email";
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices();
@@ -141,7 +140,7 @@ describe("PATCH /api/v1/users/[username]", () => {
 
       const duplicatedEmail2 = await orchestrator.createUser({});
 
-      const activatedUser2 = await orchestrator.activateUser(duplicatedEmail2);
+      await orchestrator.activateUser(duplicatedEmail2);
       const sessionObj2 = await orchestrator.createSession(duplicatedEmail2.id);
 
       const response = await fetch(

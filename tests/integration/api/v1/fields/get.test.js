@@ -1,8 +1,4 @@
 import orchestrator from "tests/orchestrator";
-import { version as uuidVersion } from "uuid";
-import session from "models/session";
-import field from "models/field";
-import setCookieParser from "set-cookie-parser";
 import user from "models/user";
 import webserver from "infra/webserver";
 

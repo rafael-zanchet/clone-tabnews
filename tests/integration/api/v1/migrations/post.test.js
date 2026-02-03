@@ -10,20 +10,17 @@ beforeAll(async () => {
 describe("POST /api/v1/migrations", () => {
   describe("Anonymous user", () => {
     test("Running pending migrations", async () => {
-      const response = await fetch(
-        `${webserver.origin}/api/v1/migrations`,
-        {
-          method: "POST",
-        },
-      );
+      const response = await fetch(`${webserver.origin}/api/v1/migrations`, {
+        method: "POST",
+      });
       expect(response.status).toBe(403);
       const responseBody = await response.json();
       expect(responseBody).toEqual({
-        name: 'ForbiddenError',
-        message: 'You do not have permission to perform this action',
-        action: 'Contact support if you believe this is an error',
-        status_code: 403
-      })
+        name: "ForbiddenError",
+        message: "You do not have permission to perform this action",
+        action: "Contact support if you believe this is an error",
+        status_code: 403,
+      });
     });
   });
 
@@ -34,19 +31,19 @@ describe("POST /api/v1/migrations", () => {
       const sessionObj = await orchestrator.createSession(activatedUser.id);
 
       const response = await fetch(`${webserver.origin}/api/v1/migrations`, {
-        headers:{
+        headers: {
           Cookie: `session_id=${sessionObj.token}`,
-        }
+        },
       });
-      
+
       expect(response.status).toBe(403);
       const responseBody = await response.json();
       expect(responseBody).toEqual({
-        name: 'ForbiddenError',
-        message: 'You do not have permission to perform this action',
-        action: 'Contact support if you believe this is an error',
-        status_code: 403
-      })
+        name: "ForbiddenError",
+        message: "You do not have permission to perform this action",
+        action: "Contact support if you believe this is an error",
+        status_code: 403,
+      });
     });
   });
 
@@ -56,15 +53,14 @@ describe("POST /api/v1/migrations", () => {
       const activatedUser = await orchestrator.activateUser(createdUser);
       await orchestrator.addFeaturesToUser(createdUser, ["create:migration"]);
       const sessionObj = await orchestrator.createSession(activatedUser.id);
-      
+
       const response = await fetch(`${webserver.origin}/api/v1/migrations`, {
         method: "POST",
-        headers:{
+        headers: {
           Cookie: `session_id=${sessionObj.token}`,
-        }
+        },
       });
-      
-      
+
       expect(response.status).toBe(200);
       const responseBody = await response.json();
       expect(Array.isArray(responseBody)).toBe(true);

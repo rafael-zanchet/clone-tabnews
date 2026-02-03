@@ -15,19 +15,19 @@ function can(user, feature, resource) {
   return authorized;
 }
 
-function filterOutput(user, feature, resource){
-  if (feature === "read:user"){
+function filterOutput(user, feature, resource) {
+  if (feature === "read:user") {
     return {
       id: resource.id,
       username: resource.username,
       features: resource.features,
       updated_at: resource.updated_at,
       created_at: resource.created_at,
-    }
+    };
   }
 
-  if (feature === "read:user:self"){
-    if (user.id === resource.id){
+  if (feature === "read:user:self") {
+    if (user.id === resource.id) {
       return {
         id: resource.id,
         username: resource.username,
@@ -35,12 +35,12 @@ function filterOutput(user, feature, resource){
         email: resource.email,
         updated_at: resource.updated_at,
         created_at: resource.created_at,
-      }
+      };
     }
   }
 
-  if (feature === "read:session"){
-    if (user.id === resource.user_id){
+  if (feature === "read:session") {
+    if (user.id === resource.user_id) {
       return {
         id: resource.id,
         token: resource.token,
@@ -48,11 +48,11 @@ function filterOutput(user, feature, resource){
         expires_at: resource.expires_at,
         created_at: resource.created_at,
         updated_at: resource.updated_at,
-      }
+      };
     }
   }
 
-  if (feature === "read:activation_token"){
+  if (feature === "read:activation_token") {
     return {
       id: resource.id,
       user_id: resource.user_id,
@@ -60,10 +60,10 @@ function filterOutput(user, feature, resource){
       used_at: resource.used_at,
       created_at: resource.created_at.toISOString(),
       updated_at: resource.updated_at,
-    }
+    };
   }
 
-  if (feature === "read:migration"){
+  if (feature === "read:migration") {
     return resource.map((migration) => {
       return {
         path: migration.path,
@@ -73,7 +73,7 @@ function filterOutput(user, feature, resource){
     });
   }
 
-  if (feature === "read:status"){
+  if (feature === "read:status") {
     const output = {
       updated_at: resource.updated_at,
       dependencies: {
@@ -84,10 +84,11 @@ function filterOutput(user, feature, resource){
       },
     };
 
-    if (can(user,"read:status:all")) {
-      output.dependencies.database.version = resource.dependencies.database.version;
+    if (can(user, "read:status:all")) {
+      output.dependencies.database.version =
+        resource.dependencies.database.version;
     }
-    
+
     console.log(resource);
     return output;
   }

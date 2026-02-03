@@ -98,13 +98,6 @@ async function activateUser(inactiveUser) {
   return await activation.activateUserByUserId(inactiveUser.id);
 }
 
-async function createFarm(farmObject) {
-  return await farm.create({
-    farm_name:
-      farmObject.farm_name || faker.string.alpha({ length: 10 }).toUpperCase(),
-    user_id: farmObject.user_id,
-  });
-}
 async function addFeaturesToUser(userObj, features) {
   const updatedUser = await user.addFeatures(userObj.id, features);
   return updatedUser;
@@ -120,7 +113,6 @@ const orchestrator = {
   getLastEmail,
   extractUUID,
   activateUser,
-  createFarm,
   addFeaturesToUser,
 };
 

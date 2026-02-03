@@ -26,22 +26,18 @@ describe("GET /api/v1/migrations", () => {
     });
   });
 
-
   describe("Privileged user", () => {
     test("With read:status:all", async () => {
       const createdUser = await orchestrator.createUser({});
       const activatedUser = await orchestrator.activateUser(createdUser);
-      await orchestrator.addFeaturesToUser(createdUser, ["read:status:all"])
+      await orchestrator.addFeaturesToUser(createdUser, ["read:status:all"]);
       const sessionObj = await orchestrator.createSession(activatedUser.id);
 
-
-      const response = await fetch(`${webserver.origin}/api/v1/status`,
-        {
-          headers: {
-            Cookie: `session_id=${sessionObj.token}`,
-          },
+      const response = await fetch(`${webserver.origin}/api/v1/status`, {
+        headers: {
+          Cookie: `session_id=${sessionObj.token}`,
         },
-      );
+      });
       expect(response.status).toBe(200);
 
       const responseBody = await response.json();

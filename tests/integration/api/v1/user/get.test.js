@@ -47,11 +47,7 @@ describe("GET /api/v1/user", () => {
         email: createdUser.email,
         created_at: createdUser.created_at.toISOString(),
         updated_at: activatedUser.updated_at.toISOString(),
-        features: [
-          "create:session",
-          "read:session",
-          "update:user",
-        ],
+        features: ["create:session", "read:session", "update:user"],
       });
       expect(uuidVersion(responseBody.id)).toBe(4);
       expect(Date.parse(responseBody.created_at)).not.toBeNaN();

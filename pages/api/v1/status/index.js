@@ -45,6 +45,10 @@ async function getHandler(request, response) {
     },
   };
 
-  const secureOutputValue = authorization.filterOutput(userTryingToGet, "read:status", statusObj);  
+  const secureOutputValue = authorization.filterOutput(
+    userTryingToGet,
+    "read:status",
+    statusObj,
+  );
   response.status(200).json(secureOutputValue);
 }

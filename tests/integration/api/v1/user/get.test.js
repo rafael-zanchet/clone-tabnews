@@ -45,17 +45,12 @@ describe("GET /api/v1/user", () => {
         id: createdUser.id,
         username: "UserWithValidSession",
         email: createdUser.email,
-        password: createdUser.password,
         created_at: createdUser.created_at.toISOString(),
         updated_at: activatedUser.updated_at.toISOString(),
         features: [
           "create:session",
           "read:session",
           "update:user",
-          "read:farm",
-          "create:farm",
-          "update:farm",
-          "delete:farm",
         ],
       });
       expect(uuidVersion(responseBody.id)).toBe(4);

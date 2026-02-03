@@ -1,5 +1,6 @@
 import orchestrator from "tests/orchestrator";
 import { version as uuidVersion } from "uuid";
+import webserver from "infra/webserver";
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices();
@@ -17,7 +18,7 @@ describe("GET /api/v1/users/[username]", () => {
       });
 
       const response2 = await fetch(
-        "http://localhost:3000/api/v1/users/MesmoCase",
+        `${webserver.origin}/api/v1/users/MesmoCase`,
       );
 
       expect(response2.status).toBe(200);
@@ -26,8 +27,6 @@ describe("GET /api/v1/users/[username]", () => {
       expect(responseBody2).toEqual({
         id: responseBody2.id,
         username: "MesmoCase",
-        email: "mesmo.case@gmail.com",
-        password: responseBody2.password,
         created_at: responseBody2.created_at,
         updated_at: responseBody2.updated_at,
         features: ["read:activation_token"],
@@ -45,7 +44,7 @@ describe("GET /api/v1/users/[username]", () => {
       });
 
       const response2 = await fetch(
-        "http://localhost:3000/api/v1/users/casediferente",
+        `${webserver.origin}/api/v1/users/casediferente`,
       );
 
       expect(response2.status).toBe(200);
@@ -54,8 +53,6 @@ describe("GET /api/v1/users/[username]", () => {
       expect(responseBody2).toEqual({
         id: responseBody2.id,
         username: "CaseDiferente",
-        email: "case.diferente@gmail.com",
-        password: responseBody2.password,
         created_at: responseBody2.created_at,
         updated_at: responseBody2.updated_at,
         features: ["read:activation_token"],
@@ -67,7 +64,7 @@ describe("GET /api/v1/users/[username]", () => {
 
     test("With nonexistent user", async () => {
       const response = await fetch(
-        "http://localhost:3000/api/v1/users/UsuarioInexistente",
+        `${webserver.origin}/api/v1/users/UsuarioInexistente`,
       );
 
       expect(response.status).toBe(404);

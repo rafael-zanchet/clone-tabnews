@@ -107,10 +107,6 @@ async function activateUserByUserId(userId) {
     "create:session",
     "read:session",
     "update:user",
-    "read:farm",
-    "create:farm",
-    "update:farm",
-    "delete:farm",
   ]);
   return activatedUser;
 }

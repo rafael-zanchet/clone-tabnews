@@ -6,7 +6,6 @@ import migrator from "models/migrator";
 import user from "models/user.js";
 import session from "models/session";
 import activation from "models/activation";
-import farm from "models/farm";
 
 const emailHttpUrl = `http://${process.env.EMAIL_HTTP_HOST}:${process.env.EMAIL_HTTP_PORT}`;
 
@@ -58,9 +57,9 @@ async function runPendingMigrations() {
 async function createUser(userObject) {
   return await user.create({
     username:
-      userObject.username || faker.internet.username().replace(/[_.-]/g, ""),
-    email: userObject.email || faker.internet.email(),
-    password: userObject.password || "123senha",
+      userObject?.username || faker.internet.username().replace(/[_.-]/g, ""),
+    email: userObject?.email || faker.internet.email(),
+    password: userObject?.password || "123senha",
   });
 }
 
@@ -99,13 +98,6 @@ async function activateUser(inactiveUser) {
   return await activation.activateUserByUserId(inactiveUser.id);
 }
 
-async function createFarm(farmObject) {
-  return await farm.create({
-    farm_name:
-      farmObject.farm_name || faker.string.alpha({ length: 10 }).toUpperCase(),
-    user_id: farmObject.user_id,
-  });
-}
 async function addFeaturesToUser(userObj, features) {
   const updatedUser = await user.addFeatures(userObj.id, features);
   return updatedUser;
@@ -121,7 +113,6 @@ const orchestrator = {
   getLastEmail,
   extractUUID,
   activateUser,
-  createFarm,
   addFeaturesToUser,
 };
 

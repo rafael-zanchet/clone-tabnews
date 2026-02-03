@@ -32,8 +32,6 @@ describe("Use case: Registration Flow (all success)", () => {
     expect(createUserResponseBody).toEqual({
       id: expect.any(String),
       username: "RegistrationFlow",
-      email: "registration.flow@clonetabnews.com",
-      password: createUserResponseBody.password,
       created_at: createUserResponseBody.created_at,
       updated_at: createUserResponseBody.updated_at,
       features: ["read:activation_token"],
@@ -80,10 +78,6 @@ describe("Use case: Registration Flow (all success)", () => {
       "create:session",
       "read:session",
       "update:user",
-      "read:farm",
-      "create:farm",
-      "update:farm",
-      "delete:farm",
     ]);
   });
 

@@ -16,7 +16,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       const uniqueUser = await orchestrator.createUser({});
 
       const response = await fetch(
-        `http://localhost:3000/api/v1/users/${uniqueUser.username}`,
+        `${webserver.origin}/api/v1/users/${uniqueUser.username}`,
         {
           method: "PATCH",
           headers: {
@@ -195,15 +195,7 @@ describe("PATCH /api/v1/users/[username]", () => {
         password: responseBody.password, // Password should be hashed
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
-        features: [
-          "create:session",
-          "read:session",
-          "update:user",
-          "read:farm",
-          "create:farm",
-          "update:farm",
-          "delete:farm",
-        ],
+        features: ["create:session", "read:session", "update:user"],
       });
       expect(uuidVersion(responseBody.id)).toBe(4);
       expect(Date.parse(responseBody.created_at)).not.toBeNaN();
@@ -236,19 +228,9 @@ describe("PATCH /api/v1/users/[username]", () => {
       expect(responseBody).toEqual({
         id: responseBody.id,
         username: uniqueEmail.username,
-        email: "uniqueEmail2@gmail.com",
-        password: responseBody.password, // Password should be hashed
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
-        features: [
-          "create:session",
-          "read:session",
-          "update:user",
-          "read:farm",
-          "create:farm",
-          "update:farm",
-          "delete:farm",
-        ],
+        features: ["create:session", "read:session", "update:user"],
       });
       expect(uuidVersion(responseBody.id)).toBe(4);
       expect(Date.parse(responseBody.created_at)).not.toBeNaN();
@@ -282,19 +264,9 @@ describe("PATCH /api/v1/users/[username]", () => {
       expect(responseBody).toEqual({
         id: responseBody.id,
         username: user1Response.username,
-        email: user1Response.email,
-        password: responseBody.password, // Password should be hashed
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
-        features: [
-          "create:session",
-          "read:session",
-          "update:user",
-          "read:farm",
-          "create:farm",
-          "update:farm",
-          "delete:farm",
-        ],
+        features: ["create:session", "read:session", "update:user"],
       });
       expect(uuidVersion(responseBody.id)).toBe(4);
       expect(Date.parse(responseBody.created_at)).not.toBeNaN();
@@ -354,8 +326,6 @@ describe("PATCH /api/v1/users/[username]", () => {
       expect(responseBody).toEqual({
         id: defaultUser.id,
         username: "AlteredByPrivilegedUser",
-        email: defaultUser.email,
-        password: defaultUser.password, // Password should be hashed
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
         features: defaultUser.features,

@@ -23,7 +23,6 @@ async function waitForAllServices() {
       const response = await fetch("http://localhost:3000/api/v1/status");
       //const responseBody = await response.json();
       if (response.status !== 200) {
-        console.log(response.status);
         throw Error();
       }
     }
@@ -39,7 +38,6 @@ async function waitForAllServices() {
       const response = await fetch(`${emailHttpUrl}`);
       //const responseBody = await response.json();
       if (response.status !== 200) {
-        console.log(response.status);
         throw Error();
       }
     }

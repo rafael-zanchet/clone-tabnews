@@ -1,6 +1,35 @@
-function can(user, feature, resource) {
-  let authorized = false;
+import { InternalServerError } from "infra/errors";
 
+const availableFeatures = [
+  //USER
+  "create:user",
+  "read:user",
+  "read:user:self",
+  "update:user",
+  "update:user:others",
+
+  // SESSION
+  "create:session",
+  "read:session",
+
+  // Activatin_token
+  "read:activation_token",
+
+  // MIGRATION 
+  "create:migration",
+  "read:migration",
+
+  // STATUS
+  "read:status",
+  "read:status:all",
+]
+
+function can(user, feature, resource) {
+  validateUser(user);
+  validateFeature(feature);  
+
+  let authorized = false;
+  
   if (user.features.includes(feature)) {
     authorized = true;
   }
@@ -16,6 +45,10 @@ function can(user, feature, resource) {
 }
 
 function filterOutput(user, feature, resource) {
+  validateUser(user);
+  validateFeature(feature);
+  validateResource(resource);
+
   if (feature === "read:user") {
     return {
       id: resource.id,
@@ -89,8 +122,32 @@ function filterOutput(user, feature, resource) {
         resource.dependencies.database.version;
     }
 
-    console.log(resource);
     return output;
+  }
+}
+
+function validateUser(user){
+  
+  if (!user || !user.features){
+    throw new InternalServerError({
+      cause: "User not defined"
+    });
+  }
+}
+
+function validateFeature(feature){
+  if(!feature || !availableFeatures.includes(feature)){
+    throw new InternalServerError({
+      cause: "Feature not defined"
+    })
+  }
+}
+
+function validateResource(resouce){
+  if(!resouce ){
+    throw new InternalServerError({
+      cause: "Resource not defined"
+    })
   }
 }
 

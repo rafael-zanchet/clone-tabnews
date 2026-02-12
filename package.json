@@ -47,6 +47,7 @@
     "@typescript-eslint/parser": "^8.29.0",
     "concurrently": "9.1.2",
     "cz-conventional-changelog": "^3.0.1",
+    "commitizen": "4",
     "eslint-config-next": "15.2.4",
     "eslint-config-prettier": "10.1.1",
     "eslint-plugin-jest": "28.11.0",
@@ -60,5 +61,8 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "engines": {
+    "node": "24"
   }
 }

@@ -15,21 +15,21 @@ const availableFeatures = [
   // Activatin_token
   "read:activation_token",
 
-  // MIGRATION 
+  // MIGRATION
   "create:migration",
   "read:migration",
 
   // STATUS
   "read:status",
   "read:status:all",
-]
+];
 
 function can(user, feature, resource) {
   validateUser(user);
-  validateFeature(feature);  
+  validateFeature(feature);
 
   let authorized = false;
-  
+
   if (user.features.includes(feature)) {
     authorized = true;
   }
@@ -126,28 +126,27 @@ function filterOutput(user, feature, resource) {
   }
 }
 
-function validateUser(user){
-  
-  if (!user || !user.features){
+function validateUser(user) {
+  if (!user || !user.features) {
     throw new InternalServerError({
-      cause: "User not defined"
+      cause: "User not defined",
     });
   }
 }
 
-function validateFeature(feature){
-  if(!feature || !availableFeatures.includes(feature)){
+function validateFeature(feature) {
+  if (!feature || !availableFeatures.includes(feature)) {
     throw new InternalServerError({
-      cause: "Feature not defined"
-    })
+      cause: "Feature not defined",
+    });
   }
 }
 
-function validateResource(resouce){
-  if(!resouce ){
+function validateResource(resouce) {
+  if (!resouce) {
     throw new InternalServerError({
-      cause: "Resource not defined"
-    })
+      cause: "Resource not defined",
+    });
   }
 }
 

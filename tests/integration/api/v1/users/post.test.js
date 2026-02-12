@@ -14,7 +14,7 @@ describe("POST /api/v1/users", () => {
   describe("Anonymous user", () => {
     test("With unique and valid data", async () => {
       const response = await fetch(`${webserver.origin}/api/v1/users`, {
-        method: "POST", 
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -25,7 +25,6 @@ describe("POST /api/v1/users", () => {
         }),
       });
 
-    
       expect(response.status).toBe(201);
 
       const responseBody = await response.json();

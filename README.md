@@ -1,3 +1,3 @@
 # clone-tabnews
 
-treinando curso.devv
+treinando curso.dev

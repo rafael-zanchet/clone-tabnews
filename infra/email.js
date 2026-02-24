@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import { ServiceError } from "./errors.js";
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
@@ -11,7 +12,16 @@ const transporter = nodemailer.createTransport({
 });
 
 async function sendEmail(mailOptions) {
-  await transporter.sendMail(mailOptions);
+  try {
+    await transporter.sendMail(mailOptions);
+  }catch(error){
+    throw new ServiceError({
+      message: "Can not send email.",
+      action: "Verify Mail Server.",
+      cause: "error",
+      context: mailOptions
+    })
+  }
 }
 
 const email = {

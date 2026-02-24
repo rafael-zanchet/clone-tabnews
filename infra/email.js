@@ -14,13 +14,13 @@ const transporter = nodemailer.createTransport({
 async function sendEmail(mailOptions) {
   try {
     await transporter.sendMail(mailOptions);
-  }catch(error){
+  } catch (error) {
     throw new ServiceError({
       message: "Can not send email.",
       action: "Verify Mail Server.",
-      cause: "error",
-      context: mailOptions
-    })
+      cause: error,
+      context: mailOptions,
+    });
   }
 }
 

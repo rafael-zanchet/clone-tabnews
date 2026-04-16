@@ -144,7 +144,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       const sessionObj2 = await orchestrator.createSession(duplicatedEmail2.id);
 
       const response = await fetch(
-        `http://localhost:3000/api/v1/users/${duplicatedEmail2.username}`,
+        `${webserver.origin}/api/v1/users/${duplicatedEmail2.username}`,
         {
           method: "PATCH",
           headers: {
@@ -174,7 +174,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       const sessionObj = await orchestrator.createSession(activatedUser.id);
 
       const response = await fetch(
-        `http://localhost:3000/api/v1/users/${uniqueUser.username}`,
+        `${webserver.origin}/api/v1/users/${uniqueUser.username}`,
         {
           method: "PATCH",
           headers: {
@@ -209,7 +209,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       const sessionObj = await orchestrator.createSession(activatedUser.id);
 
       const response = await fetch(
-        `http://localhost:3000/api/v1/users/${uniqueEmail.username}`,
+        `${webserver.origin}/api/v1/users/${uniqueEmail.username}`,
         {
           method: "PATCH",
           headers: {
@@ -244,7 +244,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       const sessionObj = await orchestrator.createSession(activatedUser.id);
 
       const response = await fetch(
-        `http://localhost:3000/api/v1/users/${user1Response.username}`,
+        `${webserver.origin}/api/v1/users/${user1Response.username}`,
         {
           method: "PATCH",
           headers: {

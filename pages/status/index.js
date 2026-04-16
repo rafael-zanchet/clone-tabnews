@@ -41,10 +41,12 @@ function Database() {
   let openedConnections = "Loading...";
 
   if (!isLoading && data) {
-    databaseStatus = data.dependencies.database.version ? "Online" : "Offline";
+    databaseStatus = data.dependencies.database.max_connections
+      ? "Online"
+      : "Offline";
     databaseVersion = data.dependencies.database.version;
-    maxConnections = data.dependencies.database.maxConnections;
-    openedConnections = data.dependencies.database.openedConnections;
+    maxConnections = data.dependencies.database.max_connections;
+    openedConnections = data.dependencies.database.opened_connections;
   }
 
   return (

@@ -33,7 +33,6 @@ async function patchHandler(request, response) {
   const targetUser = await user.findOneByUsername(username);
 
   if (!authorization.can(userTryingToPatch, "update:user", targetUser)) {
-    console.log("Authorized to update user");
     throw new ForbiddenError({
       message: "You are not allowed to update this user",
       action: "Check your permissions",

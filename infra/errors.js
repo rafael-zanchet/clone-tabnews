@@ -39,22 +39,21 @@ export class MethodNotAllowedError extends Error {
 }
 
 export class ServiceError extends Error {
-  constructor({ cause, message }) {
+  constructor({ cause, message, action, context }) {
     super(message || "Service not available", { cause });
     this.name = "ServiceError";
-    this.action = "Verify the service status and try again later.";
+    this.action = action || "Verify the service status and try again later.";
     this.status_code = 503;
+    this.context = context;
   }
 
   toJSON() {
     return {
       name: this.name,
-      error: "Internal Server Error",
       message: this.message,
-      cause: this.cause ? this.cause.message : undefined,
       action: this.action,
       status_code: this.status_code,
-      timestamp: new Date().toISOString(),
+      contect: this.context,
     };
   }
 }

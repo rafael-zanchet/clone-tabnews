@@ -41,7 +41,7 @@ describe("Use case: Registration Flow (all success)", () => {
   test("Check email sent", async () => {
     const lastEmail = await orchestrator.getLastEmail();
 
-    expect(lastEmail.sender).toBe("<contato@clonetabnews.com>");
+    expect(lastEmail.sender).toBe("<contato@seugerente.com.br>");
     expect(lastEmail.recipients[0]).toBe(
       "<registration.flow@clonetabnews.com>",
     );

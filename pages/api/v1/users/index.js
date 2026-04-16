@@ -12,10 +12,9 @@ router.post(controller.canRequest("create:user"), postHandler);
 export default router.handler(controller.errorHandlers);
 
 async function postHandler(request, response) {
-  const userTryingToPost = request.user;
+  const userTryingToPost = request.context.user;
   const userInputValues = request.body;
   const newUser = await user.create(userInputValues);
-
   const activationToken = await activation.create(newUser.id);
 
   await activation.sendEmailToUser(newUser, activationToken);

@@ -50,5 +50,5 @@ async function getHandler(request, response) {
     "read:status",
     statusObj,
   );
-  response.status(200).json(secureOutputValue);
+  return response.status(200).json(secureOutputValue);
 }

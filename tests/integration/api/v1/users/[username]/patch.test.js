@@ -42,7 +42,7 @@ describe("PATCH /api/v1/users/[username]", () => {
     test("With nonexistent username", async () => {
       const createdUser = await orchestrator.createUser({});
       const activatedUser = await orchestrator.activateUser(createdUser);
-      const sessionObj = await orchestrator.createSession(activatedUser.id);
+      const sessionObj = await orchestrator.createSession(activatedUser);
 
       const response = await fetch(
         `${webserver.origin}/api/v1/users/UsuarioInexistente`,
@@ -70,7 +70,7 @@ describe("PATCH /api/v1/users/[username]", () => {
 
       const duplicatedUser2 = await orchestrator.createUser({});
       const activatedUser2 = await orchestrator.activateUser(duplicatedUser2);
-      const sessionObj2 = await orchestrator.createSession(activatedUser2.id);
+      const sessionObj2 = await orchestrator.createSession(activatedUser2);
 
       const response = await fetch(
         `${webserver.origin}/api/v1/users/${duplicatedUser2.username}`,
@@ -108,7 +108,7 @@ describe("PATCH /api/v1/users/[username]", () => {
         email: "user2@user2.com",
       });
       const activatedUser2 = await orchestrator.activateUser(duplicatedUser2);
-      const sessionObj2 = await orchestrator.createSession(activatedUser2.id);
+      const sessionObj2 = await orchestrator.createSession(activatedUser2);
 
       const response = await fetch(
         `${webserver.origin}/api/v1/users/${duplicatedUser1.username}`,
@@ -141,7 +141,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       const duplicatedEmail2 = await orchestrator.createUser({});
 
       await orchestrator.activateUser(duplicatedEmail2);
-      const sessionObj2 = await orchestrator.createSession(duplicatedEmail2.id);
+      const sessionObj2 = await orchestrator.createSession(duplicatedEmail2);
 
       const response = await fetch(
         `${webserver.origin}/api/v1/users/${duplicatedEmail2.username}`,
@@ -171,7 +171,7 @@ describe("PATCH /api/v1/users/[username]", () => {
     test("With unique username", async () => {
       const uniqueUser = await orchestrator.createUser({});
       const activatedUser = await orchestrator.activateUser(uniqueUser);
-      const sessionObj = await orchestrator.createSession(activatedUser.id);
+      const sessionObj = await orchestrator.createSession(activatedUser);
 
       const response = await fetch(
         `${webserver.origin}/api/v1/users/${uniqueUser.username}`,
@@ -206,7 +206,7 @@ describe("PATCH /api/v1/users/[username]", () => {
     test("With unique email", async () => {
       const uniqueEmail = await orchestrator.createUser({});
       const activatedUser = await orchestrator.activateUser(uniqueEmail);
-      const sessionObj = await orchestrator.createSession(activatedUser.id);
+      const sessionObj = await orchestrator.createSession(activatedUser);
 
       const response = await fetch(
         `${webserver.origin}/api/v1/users/${uniqueEmail.username}`,
@@ -236,12 +236,16 @@ describe("PATCH /api/v1/users/[username]", () => {
       expect(Date.parse(responseBody.created_at)).not.toBeNaN();
       expect(Date.parse(responseBody.updated_at)).not.toBeNaN();
       expect(responseBody.updated_at > responseBody.created_at).toBe(true);
+
+      const userInDatabase = await user.findOneByUsername(uniqueEmail.username);
+
+      expect(userInDatabase.email).toBe("uniqueEmail2@gmail.com");
     });
 
     test("With new password", async () => {
       const user1Response = await orchestrator.createUser({});
       const activatedUser = await orchestrator.activateUser(user1Response);
-      const sessionObj = await orchestrator.createSession(activatedUser.id);
+      const sessionObj = await orchestrator.createSession(activatedUser);
 
       const response = await fetch(
         `${webserver.origin}/api/v1/users/${user1Response.username}`,
@@ -303,7 +307,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       ]);
 
       const sessionObj = await orchestrator.createSession(
-        activatedPrivilegedUser.id,
+        activatedPrivilegedUser,
       );
 
       const response = await fetch(

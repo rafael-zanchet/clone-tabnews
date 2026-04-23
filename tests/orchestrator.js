@@ -1,12 +1,12 @@
 import retry from "async-retry";
 import { faker } from "@faker-js/faker";
 
-import database from "infra/database";
-import migrator from "models/migrator";
+import database from "infra/database.js";
+import migrator from "models/migrator.js";
 import user from "models/user.js";
-import session from "models/session";
-import activation from "models/activation";
-import webserver from "infra/webserver";
+import session from "models/session.js";
+import activation from "models/activation.js";
+import webserver from "infra/webserver.js";
 
 const emailHttpUrl = `http://${process.env.EMAIL_HTTP_HOST}:${process.env.EMAIL_HTTP_PORT}`;
 
@@ -14,7 +14,7 @@ async function waitForAllServices() {
   await waitForWebServer();
   await waitForEmailServer();
 
-  function waitForWebServer() {
+  async function waitForWebServer() {
     return retry(fetchStatusPage, {
       retries: 100,
       maxTimeout: 1000,
@@ -62,8 +62,8 @@ async function createUser(userObject) {
   });
 }
 
-async function createSession(userId) {
-  return session.create(userId);
+async function createSession(userObj) {
+  return session.create(userObj.id);
 }
 
 async function deleteAllEmails() {

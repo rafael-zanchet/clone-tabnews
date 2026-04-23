@@ -17,7 +17,7 @@ describe("DELETE /api/v1/sessions", () => {
         username: "UserWithValidSession",
       });
 
-      const sessionObj = await orchestrator.createSession(createdUser.id);
+      const sessionObj = await orchestrator.createSession(createdUser);
 
       const response = await fetch(`${webserver.origin}/api/v1/sessions`, {
         method: "DELETE",
@@ -52,6 +52,7 @@ describe("DELETE /api/v1/sessions", () => {
         maxAge: -1,
         path: "/",
         httpOnly: true,
+        sameSite: "Lax",
       });
 
       // Double check assertions
@@ -107,7 +108,7 @@ describe("DELETE /api/v1/sessions", () => {
         username: "UserWithExpiredSession",
       });
 
-      const sessionObj = await orchestrator.createSession(createdUser.id);
+      const sessionObj = await orchestrator.createSession(createdUser);
       jest.useRealTimers();
       // console.log(sessionObj);
       const response = await fetch(`${webserver.origin}/api/v1/sessions`, {

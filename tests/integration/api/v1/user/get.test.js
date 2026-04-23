@@ -26,7 +26,7 @@ describe("GET /api/v1/user", () => {
       });
 
       const activatedUser = await orchestrator.activateUser(createdUser);
-      const sessionObj = await orchestrator.createSession(createdUser.id);
+      const sessionObj = await orchestrator.createSession(createdUser);
       const response = await fetch(`${webserver.origin}/api/v1/user`, {
         headers: {
           Cookie: `session_id=${sessionObj.token}`,
@@ -68,6 +68,7 @@ describe("GET /api/v1/user", () => {
         maxAge: session.EXPIRATION_IN_MILLISECONDS / 1000, // Convert milliseconds to seconds
         path: "/",
         httpOnly: true,
+        sameSite: "Lax",
       });
     });
 
@@ -100,7 +101,7 @@ describe("GET /api/v1/user", () => {
         username: "UserWithExpiredSession",
       });
 
-      const sessionObj = await orchestrator.createSession(createdUser.id);
+      const sessionObj = await orchestrator.createSession(createdUser);
       jest.useRealTimers();
 
       const response = await fetch(`${webserver.origin}/api/v1/user`, {

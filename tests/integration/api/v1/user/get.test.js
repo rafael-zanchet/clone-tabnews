@@ -68,6 +68,7 @@ describe("GET /api/v1/user", () => {
         maxAge: session.EXPIRATION_IN_MILLISECONDS / 1000, // Convert milliseconds to seconds
         path: "/",
         httpOnly: true,
+        sameSite: "Lax",
       });
     });
 

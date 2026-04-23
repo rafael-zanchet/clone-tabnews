@@ -31,7 +31,7 @@ describe("GET /api/v1/migrations", () => {
       const createdUser = await orchestrator.createUser({});
       const activatedUser = await orchestrator.activateUser(createdUser);
       await orchestrator.addFeaturesToUser(createdUser, ["read:status:all"]);
-      const sessionObj = await orchestrator.createSession(activatedUser.id);
+      const sessionObj = await orchestrator.createSession(activatedUser);
 
       const response = await fetch(`${webserver.origin}/api/v1/status`, {
         headers: {

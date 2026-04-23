@@ -15,7 +15,6 @@ export default createRouter()
   .patch(controller.canRequest("read:activation_token"), patchHandler)
   .handler(controller.errorHandlers);
 
-
 async function patchHandler(request, response) {
   const userTryingToPatch = request.context.user;
   const activationTokenId = request.query.token_id;

@@ -18,7 +18,6 @@ export default createRouter()
   .post(controller.canRequest("create:migration"), postHandler)
   .handler(controller.errorHandlers);
 
-
 async function getHandler(request, response) {
   const userTryToGet = request.context.user;
   const pendingMigrations = await migrator.listPendingMigrations();

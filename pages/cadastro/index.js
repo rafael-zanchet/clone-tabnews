@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Button } from "@primer/react";
+import DefaultLayout from "interface/DefaultLayout";
 
 export default function RegisterPage(){
     console.log("Render do <RegisterPage>");
@@ -27,7 +28,7 @@ export default function RegisterPage(){
     }
 
     return (
-        <>
+        <DefaultLayout>
             <h1>Cadastro</h1>
 
             <form onSubmit={handleSubmit}>
@@ -63,6 +64,6 @@ export default function RegisterPage(){
                 </div>
                 <Button variant="primary">Criar cadastro</Button>
             </form>
-        </>
+        </DefaultLayout>
     )
 }

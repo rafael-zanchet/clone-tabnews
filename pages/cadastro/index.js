@@ -12,6 +12,7 @@ export default function RegisterPage(){
         event.preventDefault();
 
         const requestBody = ({username, email, password});
+       
         const response = await fetch("/api/v1/users", {
             method: "POST",
             headers: {
@@ -30,39 +31,37 @@ export default function RegisterPage(){
             <h1>Cadastro</h1>
 
             <form onSubmit={handleSubmit}>
-            <div>
-                Nome: 
-                <input 
-                    type="text" 
-                    value={username} 
-                    onChange={(event) => {
-                        setUsername(event.target.value);
-                    }}
-                />
-            </div>
-            <div>
-                Email: 
-                <input 
-                    type="email" 
-                    value={email} 
-                    onChange={(event) => {
-                        setEmail(event.target.value);
-                    }}
-                />
-            </div>
-            <div>
-                Password: 
-                <input 
-                    type="password" 
-                    value={password} 
-                    onChange={(event) => {
-                        setPassword(event.target.value);
-                    }}
-                />
-            </div>
-
-            <button type="submit">Criar cadastro</button>
-            <Button>Criar cadastro</Button>
+                <div>
+                    Nome: 
+                    <input 
+                        type="text" 
+                        value={username} 
+                        onChange={(event) => {
+                            setUsername(event.target.value);
+                        }}
+                    />
+                </div>
+                <div>
+                    Email: 
+                    <input 
+                        type="email" 
+                        value={email} 
+                        onChange={(event) => {
+                            setEmail(event.target.value);
+                        }}
+                    />
+                </div>
+                <div>
+                    Password: 
+                    <input 
+                        type="password" 
+                        value={password} 
+                        onChange={(event) => {
+                            setPassword(event.target.value);
+                        }}
+                    />
+                </div>
+                <Button variant="primary">Criar cadastro</Button>
             </form>
         </>
     )

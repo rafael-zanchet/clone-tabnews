@@ -1,7 +1,14 @@
 import Head from "next/head";
 import { PageLayout, Header, Text } from "@primer/react";
+import styles from "./index.module.css";
 
-export default function DefaultLayout({ children, metadata = {} }){
+const contentWidthClasses = {
+    small: styles.smallContent
+}
+
+export default function DefaultLayout({ children, metadata = {}, contentWidth }){
+    const extraContentClassName = contentWidthClasses[contentWidth];
+
     return (
     <>
         <Head>
@@ -10,7 +17,7 @@ export default function DefaultLayout({ children, metadata = {} }){
             {metadata.description && (
                 <meta name="description" value={metadata.description} />
             )}
-            
+
         </Head>
         <Header>
             <Header.Item full>
@@ -26,7 +33,7 @@ export default function DefaultLayout({ children, metadata = {} }){
 
 
         <PageLayout>
-            <PageLayout.Content>{children} </PageLayout.Content>
+            <PageLayout.Content width={contentWidth} className={extraContentClassName} >{children} </PageLayout.Content>
             <PageLayout.Footer divider="line">
                 <Text size="small">
                     © {new Date().getFullYear()} Clone FinTab

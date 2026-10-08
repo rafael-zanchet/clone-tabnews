@@ -64,7 +64,7 @@ async function sendEmailToUser(user, activationToken) {
     subject: "Ative sua conta no Clone TabNews",
     text: `${user.username}, Ative sua conta clicando no link abaixo:
 
-${webserver.origin}/cadastro/activate/${activationToken.id} 
+${webserver.origin}/cadastro/ativar/${activationToken.id} 
 
 Atenciosamente,
 Equipe Clone TabNews

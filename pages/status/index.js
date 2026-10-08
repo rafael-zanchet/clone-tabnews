@@ -1,4 +1,5 @@
 import useSWR from "swr";
+import DefaultLayout from "../../components/layouts/DefaultLayout";
 
 async function fetchApi(key) {
   const response = await fetch(key);
@@ -8,11 +9,16 @@ async function fetchApi(key) {
 
 export default function StatusPage() {
   return (
-    <>
+    <DefaultLayout
+      contentWidth="small"
+      metadata={{
+        title: "Status",
+        description: "Status",
+      }}>
       <h1>Status</h1>
       <Database />
       <UpdartedAt />
-    </>
+    </DefaultLayout>
   );
 }
 

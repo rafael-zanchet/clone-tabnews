@@ -1,4 +1,7 @@
 import useSWR from "swr";
+import DefaultLayout from "interface/DefaultLayout";
+import { Banner, Stack, Heading } from "@primer/react";
+import { Card } from "@primer/react/experimental";
 
 async function fetchApi(key) {
   const response = await fetch(key);
@@ -8,11 +11,19 @@ async function fetchApi(key) {
 
 export default function StatusPage() {
   return (
-    <>
-      <h1>Status</h1>
-      <Database />
-      <UpdartedAt />
-    </>
+    <DefaultLayout
+      contentWidth="medium"
+      metadata={{
+        title: "Status",
+        description: "Status",
+      }}
+    >
+      <Stack gap="spacious">
+        <Heading as="h1">Status</Heading>
+        <UpdartedAt />
+        <Database />
+      </Stack>
+    </DefaultLayout>
   );
 }
 
@@ -27,35 +38,55 @@ function UpdartedAt() {
     UpdartedAtText = new Date(data.updated_at).toLocaleString("pt-BR");
   }
 
-  return <div>Ultima atulizacao : {UpdartedAtText}</div>;
+  return (
+    <Banner variant="info" layout="com">
+      <Banner.Title>Ultima atulizacao : {UpdartedAtText}</Banner.Title>
+    </Banner>
+  );
 }
 
 function Database() {
   const { isLoading, data } = useSWR("/api/v1/status", fetchApi, {
-    refreshInterval: 2000,
+    refreshInterval: 20000,
   });
 
-  let databaseStatus = "Loading...";
-  let databaseVersion = "Loading...";
-  let maxConnections = "Loading...";
-  let openedConnections = "Loading...";
-
-  if (!isLoading && data) {
-    databaseStatus = data.dependencies.database.max_connections
-      ? "Online"
-      : "Offline";
-    databaseVersion = data.dependencies.database.version;
-    maxConnections = data.dependencies.database.max_connections;
-    openedConnections = data.dependencies.database.opened_connections;
+  if (isLoading || !data) {
+    return;
   }
 
+  const database = data.dependencies.database;
+  const maxConnections = database.max_connections;
+  const openedConnections = database.opened_connections;
+  const databaseVersion = database.version ?? "-";
+
   return (
-    <>
-      <div>Database status: {databaseStatus}</div>
-      <h1>Database</h1>
-      <div>Version: {databaseVersion}</div>
-      <div>Max connections: {maxConnections}</div>
-      <div>Opened connections: {openedConnections}</div>
-    </>
+    <Stack>
+      <Heading as="h2" variant="medium">
+        Database
+      </Heading>
+      <Stack direction={{ narrow: "vertical", regular: "horizontal" }}>
+        <Stack.Item grow>
+          <Card>
+            <Card.Heading>Conexões Abertas</Card.Heading>
+            <Card.Description>{openedConnections}</Card.Description>
+            <Card.Metadata>Uso neste instante</Card.Metadata>
+          </Card>
+        </Stack.Item>
+        <Stack.Item grow>
+          <Card>
+            <Card.Heading>Conexões Máximas</Card.Heading>
+            <Card.Description>{maxConnections}</Card.Description>
+            <Card.Metadata>Conexões disponiveis</Card.Metadata>
+          </Card>
+        </Stack.Item>
+        <Stack.Item grow>
+          <Card>
+            <Card.Heading>PostgreSQL</Card.Heading>
+            <Card.Description>{databaseVersion}</Card.Description>
+            <Card.Metadata>Versão em execução</Card.Metadata>
+          </Card>
+        </Stack.Item>
+      </Stack>
+    </Stack>
   );
 }

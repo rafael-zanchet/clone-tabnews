@@ -1,5 +1,5 @@
 const nextConfig = {
-    transpilePackages: ["@primer/react"],
-}
+  transpilePackages: ["@primer/react"],
+};
 
 module.exports = nextConfig;
